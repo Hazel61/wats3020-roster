@@ -11,13 +11,41 @@
 // method should also break the username from before the `@` symbol in the
 // `email` value and use that to store on a `this.username` property.
 
+class Person {
+    constructor(name, email) {
+        this.name = name;
+        this.email = email;
+        this.username = email.split('@')[0];
+    }
+}
+
 // TODO: Create another class that extends the `Person` class called `Student`.
 // The `Student` class should add a line to the `constructor()` method that sets
 // the property `this.attendance` to an empty Array (`[ ]`). The `attendance`
 // property will be used to record and track attendance. (NOTE: You will need to
 // use the `super()` command so you don't lose the functionality of the
 // `constructor()` method from the `Person` class.)
-//
+
+class Student extends Person {
+        constructor(name, email) {
+        super(name, email);
+        this.attendance = [];
+
+    }
+    calculateAttendance () {
+            if (this.attendance.length > 0) {
+                let counter = 0;
+                for (let question of this.attendance) {
+                    counter += question;
+                }
+                let attendancePercentage = (counter / this.attendance.length) * 100;
+                return '${attendancePercentage.toFixed(2)}%';
+
+            } else {
+                return "0%";
+            }
+    }
+}
 
 
 // TODO: Create another method on the `Student` class called `calculateAttendance`.
@@ -32,8 +60,15 @@
 // The `Teacher` class should add a property called `this.honorific` (supplied
 // when an instance of `Teacher` is created).
 
+class Teacher extends Person {
+    constructor(name, email, honorific) {
+        super (name, email);
+        this.honorific = honorific;
+    }
+}
 
 // TODO: Set up our Course class so we can run the whole roster from it.
+
 class Course {
     constructor(courseCode, courseTitle, courseDescription){
         this.code = courseCode;
@@ -54,7 +89,13 @@ class Course {
     // to reference the Class instance using `this` as a parameter for
     // `updateRoster()`, so it might look like this: `updateRoster(this)`.
 
-
+addStudent() {
+      let name = prompt("Please enter full name of student: ") ;
+      let email = prompt("Please enter the student's email: ");
+      let newStudent = new Student(name, email);
+      this.students.push(newStudent);
+      updateRoster(this)
+}
     /////////////////////////////////////////
     // TODO: ADD the `setTeacher()` method /////////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////
@@ -62,15 +103,31 @@ class Course {
     // Create a method called `setTeacher()` that prompts the user for the
     // information required to create a `Teacher` object (`name`, `email`) and
     // does so, then sets the `this.teacher` property equal to the new `Teacher` object.
+setTeacher() {
+        let name = prompt("Please enter full name of teacher: ", "Becky Peltz");
+        let email = prompt("Please enter teacher's email address:", "becky@seattleu.edu");
+        let honorific = prompt("Please enter teacher's honorific: ", "Professor");
+        this.teacher = new Teacher(name, email, honorific);
+        updateRoster(this);
+}
 
 
-    /////////////////////////////////////////
-    // TODO: ADD `markAttendance()` method /////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////
+
+markAttendance(username, status = 'present'){
+        let foundStudent = this.findStudent(username);
+        if (status === 'present') {
+            foundStudent.attendance.push(1);
+        } else {
+            foundStudent.attendance.push(0);
+        }
+        updateRoster(this);
+
+}
     //
     // TODO: Create a method to mark a student's attendance called `markAttendance()`.
     // This method should accept a parameter called `username` containing the
     // `username` that will match the `username` property on the `Student` object.
+
 
     // TODO: The FIRST step to create a functioning `markAttendance()` method is
     // to retreive the `Student` object out of the `this.students` Array. You
@@ -108,15 +165,16 @@ class Course {
 // `Course` object, you must gather the following information:
 //
 // TODO: Prompt the user for the `courseCode` (the number/code of the course, like "WATS 3000").
+let courseCode = prompt("Enter the course code: ", "wats 3020");
 
 // TODO: Prompt the user for the `courseTitle` (the name of the course, like "Introduction to JavaScript").
-
+let courseTitle = prompt("Enter the course title: ", "Introduction to JavaScript");
 // TODO: Prompt the user for the  `courseDescription` (the descriptive summary of the course).
-
+let courseDescription = prompt("Enter the course description: ", "Learning to code JS");
 // Create a new `Course` object instance called `myCourse` using the three data points just collected from the user.
 // TODO: Add in the values for the information supplied by the user above.
 
-
+let myCourse = new Course (courseCode, courseTitle, courseDescription);
 ///////////////////////////////////////////////////
 //////// Main Script /////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
