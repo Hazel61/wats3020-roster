@@ -2,6 +2,7 @@
 
 button {
     background: royalblue;
+    margin: 2px;
     padding: 0.2rem;
     border: 1px rgba(255,255,255,0) solid;
     color: #fff;

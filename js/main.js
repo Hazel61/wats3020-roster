@@ -65,6 +65,13 @@ class Course {
         this.students.push(newStudent);
         updateRoster(this)
     }
+    deleteStudent(studentName) {
+       let studentIndex = this.students.findIndex(element => {
+           return studentName === element.username;
+       });
+       this.students.splice(studentIndex, 1);
+       updateRoster(this);
+    }
 
     // Create a method called `setTeacher()` that prompts the user for the
     // information required to create a `Teacher` object (`name`, `email`) and
@@ -87,7 +94,7 @@ class Course {
         }
         updateRoster(this);
     }
-    
+
     //////////////////////////////////////////////
     // Methods provided for you -- DO NOT EDIT /////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////
@@ -167,7 +174,7 @@ function updateRoster(course) {
         rosterTeacher.innerHTML = "Not Set";
     }
     // Populate Roster Content
-    for (student of course.students) {
+    for (let student of course.students) {
         // Create a new row for the table.
         let newTR = document.createElement('tr');
 
@@ -197,6 +204,12 @@ function updateRoster(course) {
         absentButton.setAttribute('class', 'absent');
         actionsTD.appendChild(absentButton);
 
+        let deleteButton = document.createElement('button');
+        deleteButton.innerHTML = "Delete student";
+        deleteButton.setAttribute('data-username', student.username);
+        deleteButton.setAttribute('class', 'delete');
+        actionsTD.appendChild(deleteButton);
+
         newTR.appendChild(actionsTD);
 
         // Append the new row to the roster table.
@@ -223,6 +236,15 @@ function setupAttendanceButtons() {
             myCourse.markAttendance(e.target.dataset.username, 'absent');
             updateRoster(myCourse);
         });
+    }
+    let deleteButtons = document.querySelectorAll('.delete');
+    for (button of deleteButtons) {
+         button.addEventListener('click', function (e) {
+                console.log('Calling deleteStudent() method.');
+                myCourse.deleteStudent(e.target.dataset.username);
+                updateRoster(myCourse);
+         })
+
     }
 }
 
