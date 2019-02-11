@@ -1,9 +1,8 @@
 /* JS for WATS 3020 Roster Project */
 
 
-
-// Creates a Person class that takes the parameters `name`
-// and `email` and makes those available as attributes.
+// Create a base class for people that needs parameters for name
+// and email, and makes those available as attributes.
 
 class Person {
     constructor(name, email) {
@@ -13,51 +12,43 @@ class Person {
     }
 }
 
-// Creates another class that extends the `Person` class called `Student`.
-// An attendance property will be used to record and track attendance.
+// Create another class for students that extends the person class.
+// Object needs parameters for name and email.
+// Create a property to record and track attendance.
 
 class Student extends Person {
-        constructor(name, email) {
+    constructor(name, email) {
         super(name, email);
         this.attendance = [];
-
     }
-    calculateAttendance () {
-            if (this.attendance.length > 0) {
-                let counter = 0;
-                for (let question of this.attendance) {
-                    counter += question;
-                }
-                let attendancePercentage = (counter / this.attendance.length) * 100;
-                return `${attendancePercentage.toFixed(2)}%`;
-
-            } else {
-                return "0%";
+// calculates and returns attendance percentage.
+    calculateAttendance() {
+        if (this.attendance.length > 0) {
+            let counter = 0;
+            for (let question of this.attendance) {
+                counter += question;
             }
+            let attendancePercentage = (counter / this.attendance.length) * 100;
+            return `${attendancePercentage.toFixed(2)}%`;
+
+        } else {
+            return "0%";
+        }
     }
 }
 
-// This method should give a percentage of how many days the student was present.
-// It should return a string like "90%" or "84.732%". Attendance should be
-// recorded into an Array using either a `0` for "absent" or a `1` for "present".
-// This should allow attendance percentage to be calculated as the average of
-// all the items in the `attendance` Array.
-
-
-
-// Creates another class that extends the `Person` class called `Teacher`.
-
-
+// Creates another class for teachers that extends the person class.
+// Object needs parameters for name, email, and honorific.
 class Teacher extends Person {
     constructor(name, email, honorific) {
-        super (name, email);
+        super(name, email);
         this.honorific = honorific;
     }
 }
 
-
+// Create a base class for courses. Object needs parameters for course code, title and description.
 class Course {
-    constructor(courseCode, courseTitle, courseDescription){
+    constructor(courseCode, courseTitle, courseDescription) {
         this.code = courseCode;
         this.title = courseTitle;
         this.description = courseDescription;
@@ -65,34 +56,29 @@ class Course {
         this.students = [];
     }
 
-    // Create a method called `addStudent()` that prompts the user for
-    // information required to create a new `Student` object (`name`, `email`)
-    // and does so, then adds the student to the `this.students` Array. Be sure
-    // to update the roster display by calling `updateRoster()`. You will need
-    // to reference the Class instance using `this` as a parameter for
-    // `updateRoster()`, so it might look like this: `updateRoster(this)`.
-
-addStudent() {
-      let name = prompt("Please enter full name of student: ", "Vlada Smith") ;
-      let email = prompt("Please enter the student's email: ", "vlada@gmail.com");
-      let newStudent = new Student(name, email);
-      this.students.push(newStudent);
-      updateRoster(this)
-}
+    // Prompts user for information required to create a new Student object.
+    // Object needs two parameters for name and email and should update roster.
+    addStudent() {
+        let name = prompt("Please enter full name of student: ", "Vlada Smith");
+        let email = prompt("Please enter the student's email: ", "vlada@gmail.com");
+        let newStudent = new Student(name, email);
+        this.students.push(newStudent);
+        updateRoster(this)
+    }
 
     // Create a method called `setTeacher()` that prompts the user for the
     // information required to create a `Teacher` object (`name`, `email`) and
     // does so, then sets the `this.teacher` property equal to the new `Teacher` object.
-setTeacher() {
+    setTeacher() {
         let name = prompt("Please enter full name of teacher: ", "Becky Peltz");
         let email = prompt("Please enter teacher's email address:", "becky@seattleu.edu");
         let honorific = prompt("Please enter teacher's honorific: ", "Professor");
         this.teacher = new Teacher(name, email, honorific);
         updateRoster(this);
-}
-
-
-markAttendance(username, status = 'present'){
+    }
+    // Record whether student is present or absent
+    // Needs parameters for a username and attendance
+    markAttendance(username, status = 'present') {
         let foundStudent = this.findStudent(username);
         if (status === 'present') {
             foundStudent.attendance.push(1);
@@ -100,24 +86,17 @@ markAttendance(username, status = 'present'){
             foundStudent.attendance.push(0);
         }
         updateRoster(this);
-
-}
-
-    // This method should accept a parameter called `username` containing the
-    // `username` that will match the `username` property on the `Student` object.
-
-
-
-
+    }
+    
     //////////////////////////////////////////////
     // Methods provided for you -- DO NOT EDIT /////////////////////////////////
     ////////////////////////////////////////////////////////////////////////////
 
-    findStudent(username){
+    findStudent(username) {
         // This method provided for convenience. It takes in a username and looks
         // for that username on student objects contained in the `this.students`
         // Array.
-        let foundStudent = this.students.find(function(student, index){
+        let foundStudent = this.students.find(function (student, index) {
             return student.username == username;
         });
         return foundStudent;
@@ -132,7 +111,7 @@ let courseCode = prompt("Enter the course code: ", "wats 3020");
 let courseTitle = prompt("Enter the course title: ", "Introduction to JavaScript");
 let courseDescription = prompt("Enter the course description: ", "Learning to code JS");
 
-let myCourse = new Course (courseCode, courseTitle, courseDescription);
+let myCourse = new Course(courseCode, courseTitle, courseDescription);
 ///////////////////////////////////////////////////
 //////// Main Script /////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////
@@ -147,7 +126,7 @@ rosterTitle.innerHTML = `${myCourse.code}: ${myCourse.title}`;
 let rosterDescription = document.querySelector('#course-description');
 rosterDescription.innerHTML = myCourse.description;
 
-if (myCourse.teacher){
+if (myCourse.teacher) {
     let rosterTeacher = document.querySelector('#course-teacher');
     rosterTeacher.innerHTML = `${myCourse.teacher.honorific} ${myCourse.teacher.name}`;
 } else {
@@ -161,14 +140,14 @@ rosterTbody.innerHTML = '';
 
 // Create event listener for adding a student.
 let addStudentButton = document.querySelector('#add-student');
-addStudentButton.addEventListener('click', function(e){
+addStudentButton.addEventListener('click', function (e) {
     console.log('Calling addStudent() method.');
     myCourse.addStudent();
 })
 
 // Create event listener for adding a teacher.
 let addTeacherButton = document.querySelector('#add-teacher');
-addTeacherButton.addEventListener('click', function(e){
+addTeacherButton.addEventListener('click', function (e) {
     console.log('Calling setTeacher() method.');
     myCourse.setTeacher();
 })
@@ -176,11 +155,11 @@ addTeacherButton.addEventListener('click', function(e){
 // Call Update Roster to initialize the content of the page.
 updateRoster(myCourse);
 
-function updateRoster(course){
+function updateRoster(course) {
     let rosterTbody = document.querySelector('#roster tbody');
     // Clear Roster Content
     rosterTbody.innerHTML = '';
-    if (course.teacher){
+    if (course.teacher) {
         let rosterTeacher = document.querySelector('#course-teacher');
         rosterTeacher.innerHTML = `${course.teacher.honorific} ${course.teacher.name}`;
     } else {
@@ -188,7 +167,7 @@ function updateRoster(course){
         rosterTeacher.innerHTML = "Not Set";
     }
     // Populate Roster Content
-    for (student of course.students){
+    for (student of course.students) {
         // Create a new row for the table.
         let newTR = document.createElement('tr');
 
@@ -227,19 +206,19 @@ function updateRoster(course){
     setupAttendanceButtons();
 }
 
-function setupAttendanceButtons(){
+function setupAttendanceButtons() {
     // Set up the event listeners for buttons to mark attendance.
     let presentButtons = document.querySelectorAll('.present');
-    for (button of presentButtons){
-        button.addEventListener('click', function(e){
+    for (button of presentButtons) {
+        button.addEventListener('click', function (e) {
             console.log(`Marking ${e.target.dataset.username} present.`);
             myCourse.markAttendance(e.target.dataset.username);
             updateRoster(myCourse);
         });
     }
     let absentButtons = document.querySelectorAll('.absent');
-    for (button of absentButtons){
-        button.addEventListener('click', function(e){
+    for (button of absentButtons) {
+        button.addEventListener('click', function (e) {
             console.log(`Marking ${e.target.dataset.username} absent.`);
             myCourse.markAttendance(e.target.dataset.username, 'absent');
             updateRoster(myCourse);
